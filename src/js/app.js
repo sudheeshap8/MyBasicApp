@@ -1,4 +1,4 @@
-console.log('ABC...');
+console.log('Hello');
 
 window.isUpdateAvailable.then(isAvailable => {
 
