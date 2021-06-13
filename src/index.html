@@ -51,25 +51,70 @@
     <section>
 
       <h1 class="subheader">Hello world!</h1>
-      <div class="feature1-box">lorem ipsum</div>
+      <div class="feature1-box">New version available: <b id="update-status"></b></div>
 
       <button class="f5 dim br2 ph3 pv2 mb2 dib white bg-black">Click here!</button>
 
     </section>
     
     <script>
-      if ("serviceWorker" in navigator) {
-          window.addEventListener("load", () => {
-              navigator.serviceWorker
-                  .register("service-worker.js")
-                  .then((registration) => {
-                      console.log("Service Worker registered: ", registration);
-                  })
-                  .catch((registrationError) => {
-                      console.error("Service Worker registration failed: ", registrationError);
-                  });
+    //   if ("serviceWorker" in navigator) {
+    //       window.addEventListener("load", () => {
+    //           navigator.serviceWorker
+    //               .register("service-worker.js")
+    //               .then((registration) => {
+    //                   console.log("Service Worker registered: ", registration);
+    //               })
+    //               .catch((registrationError) => {
+    //                   console.error("Service Worker registration failed: ", registrationError);
+    //               });
+    //       });
+    //   }
+
+    window.isUpdateAvailable = new Promise(function(resolve, reject) {
+
+      // Lazy way of disabling service workers while developing
+      if ('serviceWorker' in navigator) {
+        
+        // Register service worker file
+        navigator.serviceWorker.register('service-worker.js')
+          .then(registration => {
+
+            console.log("Service Worker registered: ", registration);
+
+            registration.onupdatefound = () => {
+
+              const installingWorker = registration.installing;
+              
+              installingWorker.onstatechange = () => {
+
+                switch (installingWorker.state) {
+
+                  case 'installed':
+                    if (navigator.serviceWorker.controller) {
+
+                      console.log('New version available');
+
+                      // New update available
+                      resolve(true);
+                    } else {
+
+                      console.log('No update available');
+
+                      // No update available
+                      resolve(false);
+                    }
+                    break;
+                }
+              };
+            };
+          })
+          .catch(err => {
+            
+            console.error("Service Worker registration failed: ", registrationError);
           });
       }
+    });
     </script>
 
   </body>
