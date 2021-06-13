@@ -1,0 +1,1 @@
+console.log("Hello"),window.isUpdateAvailable.then((e=>{document.getElementById("update-status").textContent=e?"YES":"NO"})),document.getElementById("btn-reload").addEventListener("click",(function(){myInstallingWorker.postMessage({action:"skipWaiting"})}));

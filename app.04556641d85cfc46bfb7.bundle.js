@@ -1,0 +1,1 @@
+console.log("ABC...test updates"),window.isUpdateAvailable.then((t=>{document.getElementById("update-status").textContent=t?"YES":"NO"}));

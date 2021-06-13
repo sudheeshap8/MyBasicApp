@@ -1,0 +1,1 @@
+console.log("Hello"),window.isUpdateAvailable.then((e=>{document.getElementById("update-status").textContent=e?"YES":"NO"}));
