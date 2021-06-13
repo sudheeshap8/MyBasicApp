@@ -1,0 +1,1 @@
+console.log("Service worker version: ","1.1.2"),self.addEventListener("message",(function(e){"skipWaiting"===e.data.action&&self.skipWaiting()}));
