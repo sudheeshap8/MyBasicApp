@@ -53,7 +53,7 @@
       <h1 class="subheader">Hello world!</h1>
       <div class="feature1-box">New version available: <b id="update-status"></b></div>
 
-      <button class="f5 dim br2 ph3 pv2 mb2 dib white bg-black">Click here!</button>
+      <button id="btn-reload" class="f5 dim br2 ph3 pv2 mb2 dib white bg-black">Reload!</button>
 
     </section>
     
@@ -86,6 +86,9 @@
 
               const installingWorker = registration.installing;
               
+              // Add to window
+              window.myInstallingWorker = installingWorker;
+              
               installingWorker.onstatechange = () => {
 
                 switch (installingWorker.state) {
@@ -112,6 +115,20 @@
           .catch(err => {
             
             console.error("Service Worker registration failed: ", registrationError);
+          });
+
+
+          let refreshing;
+          
+          // The event listener that is fired when the service worker updates
+          // Here we reload the page
+          navigator.serviceWorker.addEventListener('controllerchange', function () {
+
+            if (refreshing) return;
+
+            window.location.reload();
+            
+            refreshing = true;
           });
       }
     });

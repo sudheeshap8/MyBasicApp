@@ -13,3 +13,9 @@ window.isUpdateAvailable.then(isAvailable => {
 
   elem.textContent = 'NO';
 });
+
+// The click event on the notification
+document.getElementById('btn-reload').addEventListener('click', function(){
+
+  myInstallingWorker.postMessage({ action: 'skipWaiting' });
+});
