@@ -1,15 +1,12 @@
-# 🚀 Welcome to your new awesome project!
+- Docker steps
 
-This project has been created using **webpack-cli**, you can now run
+* docker build --tag my-tag .
+* docker run my-tag
+* docker run -p 4000:9000 --name hallo -d my-tag
 
-```
-npm run build
-```
+- Use with Jenkins
 
-or
+https://www.jenkins.io/doc/book/installing/docker/
 
-```
-yarn build
-```
-
-to bundle your application
+- docker pull jenkins/jenkins
+- docker network create jenkins

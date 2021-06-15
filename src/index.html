@@ -3,13 +3,45 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title></title>
-    <meta name="description" content="">
+    <title>My basic app</title>
+    <meta name="description" content="This is a basic javascript application">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#4285f4">
+    <link rel="manifest" href="manifest.json">
+
+    <link rel="shortcut icon" type="image/jpg" href="images/favicon.ico"/>
+    
+    <!-- Add to homescreen for Chrome on Android. Fallback for manifest.json -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="My App">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="My App">
+
+    <!-- Homescreen icons -->
+    <link rel="apple-touch-icon" href="images/icon-48x48.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="96x96" href="images/icon-96x96.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="images/icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="images/icon-192x192.png">
+
+    <!-- Tile icon for Windows 8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="images/icon-144x144.png">
+    <meta name="msapplication-TileColor" content="#3f51b5">
+    <meta name="msapplication-tap-highlight" content="no">
+
+    <!-- Default twitter cards -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@username">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="my-app">
+    <meta property="og:image" content="/images/icon-144x144.png" />
   </head>
   <body>
     <!--[if lt IE 7]>
@@ -19,25 +51,87 @@
     <section>
 
       <h1 class="subheader">Hello world!</h1>
-      <div class="feature1-box">lorem ipsum</div>
+      <div class="feature1-box">New version available: <b id="update-status"></b></div>
 
-      <button class="f5 dim br2 ph3 pv2 mb2 dib white bg-black">Click here!</button>
+      <button id="btn-reload" class="f5 dim br2 ph3 pv2 mb2 dib white bg-black">Reload!</button>
 
     </section>
     
     <script>
-      if ("serviceWorker" in navigator) {
-          window.addEventListener("load", () => {
-              navigator.serviceWorker
-                  .register("service-worker.js")
-                  .then((registration) => {
-                      console.log("Service Worker registered: ", registration);
-                  })
-                  .catch((registrationError) => {
-                      console.error("Service Worker registration failed: ", registrationError);
-                  });
+    //   if ("serviceWorker" in navigator) {
+    //       window.addEventListener("load", () => {
+    //           navigator.serviceWorker
+    //               .register("service-worker.js")
+    //               .then((registration) => {
+    //                   console.log("Service Worker registered: ", registration);
+    //               })
+    //               .catch((registrationError) => {
+    //                   console.error("Service Worker registration failed: ", registrationError);
+    //               });
+    //       });
+    //   }
+
+    window.isUpdateAvailable = new Promise(function(resolve, reject) {
+
+      // Lazy way of disabling service workers while developing
+      if ('serviceWorker' in navigator) {
+        
+        // Register service worker file
+        navigator.serviceWorker.register('service-worker.js')
+          .then(registration => {
+
+            console.log("Service Worker registered: ", registration);
+
+            registration.onupdatefound = () => {
+
+              const installingWorker = registration.installing;
+              
+              // Add to window
+              window.myInstallingWorker = installingWorker;
+              
+              installingWorker.onstatechange = () => {
+
+                switch (installingWorker.state) {
+
+                  case 'installed':
+                    if (navigator.serviceWorker.controller) {
+
+                      console.log('New version available');
+
+                      // New update available
+                      resolve(true);
+                    } else {
+
+                      console.log('No update available');
+
+                      // No update available
+                      resolve(false);
+                    }
+                    break;
+                }
+              };
+            };
+          })
+          .catch(err => {
+            
+            console.error("Service Worker registration failed: ", registrationError);
+          });
+
+
+          let refreshing;
+          
+          // The event listener that is fired when the service worker updates
+          // Here we reload the page
+          navigator.serviceWorker.addEventListener('controllerchange', function () {
+
+            if (refreshing) return;
+
+            window.location.reload();
+            
+            refreshing = true;
           });
       }
+    });
     </script>
 
   </body>

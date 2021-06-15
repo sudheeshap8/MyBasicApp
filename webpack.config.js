@@ -3,6 +3,8 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
+const CopyPlugin = require("copy-webpack-plugin");
+
 
 const isProduction = process.env.NODE_ENV == 'production';
 
@@ -14,7 +16,6 @@ const stylesHandler = 'style-loader';
 const config = {
     entry: {
         app: './src/js/app.js',
-        // 'service-worker': './src/js/sw.js',
         serviceworker: './src/js/service-worker.js',
         css: './src/styles/app.scss'
     },
@@ -29,6 +30,16 @@ const config = {
     plugins: [
         new HtmlWebpackPlugin({
             template: '/src/index.html',
+        }),
+
+        new CopyPlugin({
+            patterns: [
+              { from: path.resolve(__dirname, "src", "assets/images"), to: path.resolve(__dirname, "dist", "images") },
+              { from: path.resolve(__dirname, "manifest.json"), to: path.resolve(__dirname, "dist", "manifest.json") },
+            ],
+            options: {
+              concurrency: 100,
+            },
         }),
 
         // Add your plugins here
