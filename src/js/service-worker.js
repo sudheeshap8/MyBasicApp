@@ -1,4 +1,4 @@
-const VERSION = '1.1.5';
+const VERSION = '1.1.6';
 
 console.log('Service worker version: ', VERSION);
 
