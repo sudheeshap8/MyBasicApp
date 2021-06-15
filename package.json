@@ -11,7 +11,8 @@
     "watch": "webpack --watch",
     "serve": "webpack serve",
     "start": "webpack --mode=development --watch && webpack serve",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+    "docker-serve": "webpack serve --host 0.0.0.0 --port 9000"
   },
   "author": "",
   "license": "ISC",
